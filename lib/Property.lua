@@ -1,7 +1,22 @@
 local Roact = require(script.Parent.Parent.Roact)
+local t = require(script.Parent.Parent.PropTypes)
 local FitChildren = require(script.Parent.FitChildren)
 
-local function Property(props)
+local Property = Roact.Component:extend("Property")
+
+Property.defaultProps = {
+	LayoutOrder = 0,
+	propertyName = "props.propertyName",
+}
+
+Property.validateProps = t.object({
+	LayoutOrder = t.number,
+	propertyName = t.string,
+})
+
+function Property:render()
+	local props = self.props
+
 	return Roact.createElement(FitChildren.Frame, {
 		Size = UDim2.new(1, 0, 0, 0),
 		LayoutOrder = props.LayoutOrder,
@@ -20,7 +35,7 @@ local function Property(props)
 				Size = UDim2.new(1, -8, 1, 0),
 				Position = UDim2.new(0, 8, 0, 0),
 
-				Text = props.propertyName or "props.propertyName",
+				Text = props.propertyName,
 				Font = Enum.Font.SourceSans,
 				TextSize = 16,
 				TextColor3 = Color3.fromRGB(0, 0, 0),

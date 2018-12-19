@@ -1,13 +1,25 @@
 local Roact = require(script.Parent.Parent.Roact)
+local t = require(script.Parent.Parent.PropTypes)
 local Constants = require(script.Parent.Constants)
 local FitChildren = require(script.Parent.FitChildren)
 
 local Section = Roact.PureComponent:extend("Section")
 
+Section.defaultProps = {
+	LayoutOrder = 0,
+	titleText = "props.titleText",
+}
+
+Section.validateProps = t.object({
+	LayoutOrder = t.number,
+	titleText = t.string,
+})
+
 function Section:render()
 	local props = self.props
 
 	return Roact.createElement(FitChildren.Frame, {
+		LayoutOrder = props.LayoutOrder,
 		BackgroundTransparency = 1.0,
 		Size = UDim2.new(1, 0, 0, 0),
 	}, {
@@ -39,12 +51,14 @@ function Section:render()
 				TextSize = 15,
 				TextColor3 = Constants.black,
 				TextXAlignment = Enum.TextXAlignment.Left,
-				Text = props.titleText or "props.titleText",
+				Text = props.titleText,
 				Position = UDim2.new(0, Constants.titlebarHeight, 0, 0),
 				Size = UDim2.new(1, -Constants.titlebarHeight, 1, 0),
 			}),
 			Minimize = Roact.createElement("ImageButton", {
-				Image = self.state.minimized and 'rbxasset://textures/TerrainTools/button_arrow.png' or 'rbxasset://textures/TerrainTools/button_arrow_down.png',
+				Image = self.state.minimized and
+					'rbxasset://textures/TerrainTools/button_arrow.png' or
+					'rbxasset://textures/TerrainTools/button_arrow_down.png',
 				Size = UDim2.new(0, 9, 0, 9),
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				Position = UDim2.new(0, Constants.titlebarHeight * 0.5, 0, Constants.titlebarHeight * 0.5),

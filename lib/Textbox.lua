@@ -1,6 +1,27 @@
 local Roact = require(script.Parent.Parent.Roact)
+local t = require(script.Parent.Parent.PropTypes)
 
 local Textbox = Roact.PureComponent:extend("Textbox")
+
+Textbox.defaultProps = {
+	LayoutOrder = 0,
+	Size = UDim2.new(0, 300, 0, 20),
+
+	value = "",
+	setValue = nil,
+	focusLost = nil,
+	onSubmit = nil,
+}
+
+Textbox.validateProps = t.object({
+	LayoutOrder = t.number,
+	Size = t.UDim2,
+
+	value = t.string,
+	setValue = t.opt(t.func),
+	focusLost = t.opt(t.func),
+	onSubmit = t.opt(t.func),
+})
 
 function Textbox:render()
 	local props = self.props
@@ -10,7 +31,7 @@ function Textbox:render()
 	local onSubmit = props.onSubmit
 
 	return Roact.createElement("Frame", {
-		Size = props.Size or UDim2.new(0, 300, 0, 20),
+		Size = props.Size,
 		LayoutOrder = props.LayoutOrder,
 
 		BackgroundColor3 = Color3.fromRGB(255, 255, 255),
@@ -25,7 +46,7 @@ function Textbox:render()
 			Position = UDim2.new(0, 4, 0, 0),
 			ClipsDescendants = true,
 			ClearTextOnFocus = false,
-			Text = tostring(value) or "",
+			Text = tostring(value),
 
 			[Roact.Event.FocusLost] = function(rbx, enterPressed)
 				if enterPressed then

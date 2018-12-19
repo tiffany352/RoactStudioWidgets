@@ -7,26 +7,38 @@ local assetPressed = "rbxasset://textures/TerrainTools/button_pressed.png"
 
 local Button = Roact.PureComponent:extend("Button")
 
-Button.validateProps = t.object({
-	Size = t.opt(t.UDim2),
-	LayoutOrder = t.opt(t.number),
+Button.defaultProps = {
+	Size = UDim2.new(0, 150, 0, 24),
+	LayoutOrder = 0,
 
-	disabled = t.opt(t.boolean),
-	pressed = t.opt(t.boolean),
+	labelText = "props.labelText",
+	disabled = false,
+	pressed = false,
+	onClick = nil,
+}
+
+Button.validateProps = t.object({
+	Size = t.UDim2,
+	LayoutOrder = t.number,
+
+	labelText = t.string,
+	disabled = t.boolean,
+	pressed = t.boolean,
 	onClick = t.opt(t.func),
-	labelText = t.opt(t.string),
 })
-print("Button.validateProps", Button.validateProps)
 
 function Button:render()
 	local props = self.props
+
+	local pressed = props.pressed or self.state.pressed
+
 	return Roact.createElement("ImageButton", {
-		Size = props.Size or UDim2.new(0, 150, 0, 24),
+		Size = props.Size,
 		LayoutOrder = props.LayoutOrder,
 
 		Image =
 			props.disabled and assetDefault or
-			(props.pressed or self.state.pressed) and assetPressed or
+			pressed and assetPressed or
 			self.state.hovered and assetHovered or
 			assetDefault,
 		BackgroundTransparency = 1.0,
@@ -69,10 +81,10 @@ function Button:render()
 		end,
 	}, {
 		ButtonLabel = Roact.createElement("TextLabel", {
-			Text = props.labelText or "props.labelText",
+			Text = props.labelText,
 			TextColor3 =
 				props.disabled and Color3.fromRGB(102, 102, 102) or
-				(props.pressed or self.state.pressed) and Color3.fromRGB(255, 255, 255) or
+				pressed and Color3.fromRGB(255, 255, 255) or
 				Color3.fromRGB(0, 0, 0),
 			BackgroundTransparency = 1.0,
 			Size = UDim2.new(1, 0, 1, 0),

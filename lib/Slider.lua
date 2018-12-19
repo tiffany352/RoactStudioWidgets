@@ -1,4 +1,5 @@
 local Roact = require(script.Parent.Parent.Roact)
+local t = require(script.Parent.Parent.PropTypes)
 
 local sliderAsset = "rbxasset://textures/TerrainTools/sliderbar_button.png"
 local preAsset = "rbxasset://textures/TerrainTools/sliderbar_blue.png"
@@ -6,10 +7,24 @@ local postAsset = "rbxasset://textures/TerrainTools/sliderbar_grey.png"
 
 local Slider = Roact.PureComponent:extend("Slider")
 
--- props:
--- float value
--- float ticks
--- void setValue(float)
+Slider.defaultProps = {
+	LayoutOrder = 0,
+	Size = UDim2.new(0, 100, 0, 20),
+
+	value = 0.5,
+	ticks = nil,
+	setValue = nil,
+}
+
+Slider.validateProps = t.object({
+	LayoutOrder = t.number,
+	Size = t.UDim2,
+
+	value = t.number,
+	ticks = t.opt(t.number),
+	setValue = t.opt(t.func),
+})
+
 function Slider:render()
 	local props = self.props
 	return Roact.createElement("ImageButton", {
@@ -33,7 +48,6 @@ function Slider:render()
 				)
 				local value = (mousePos - rbx.AbsolutePosition) / rbx.AbsoluteSize
 				if props.setValue then
-					print("raw value", value.X)
 					props.setValue(value.X)
 				end
 			end
@@ -58,7 +72,7 @@ function Slider:render()
 		}, {
 			Fill = Roact.createElement("ImageLabel", {
 				Position = UDim2.new(0, 2, 0, 2),
-				Size = UDim2.new(props.value or 0.5, 0, 0, 7),
+				Size = UDim2.new(props.value, 0, 0, 7),
 				BackgroundTransparency = 1.0,
 				Image = self.state.pressed and preAsset or postAsset,
 				ScaleType = Enum.ScaleType.Slice,

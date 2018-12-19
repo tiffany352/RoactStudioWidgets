@@ -1,8 +1,32 @@
 local Roact = require(script.Parent.Parent.Roact)
+local t = require(script.Parent.Parent.PropTypes)
 local Button = require(script.Parent.Button)
 local FitChildren = require(script.Parent.FitChildren)
 
-local function RadioButtons(props)
+local RadioButtons = Roact.Component:extend("RadioButtons")
+
+RadioButtons.defaultProps = {
+	LayoutOrder = 0,
+
+	buttons = {
+		"Option 1",
+		"Option 2",
+		"Option 3",
+	},
+	selected = nil,
+	onSelect = nil,
+}
+
+RadioButtons.validateProps = t.object({
+	LayoutOrder = t.number,
+
+	buttons = t.arrayOf(t.string),
+	selected = t.opt(t.number),
+	onSelect = t.opt(t.func),
+})
+
+function RadioButtons:render()
+	local props = self.props
 	local children = {}
 	children.UIGridLayout = Roact.createElement("UIGridLayout", {
 		SortOrder = Enum.SortOrder.LayoutOrder,
@@ -34,6 +58,7 @@ local function RadioButtons(props)
 	end
 
 	return Roact.createElement(FitChildren.Frame, {
+		LayoutOrder = props.LayoutOrder,
 		Size = UDim2.new(1, 0, 0, 0),
 		BackgroundTransparency = 1.0,
 	}, children)

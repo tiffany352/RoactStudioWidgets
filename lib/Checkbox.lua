@@ -1,17 +1,33 @@
 local Roact = require(script.Parent.Parent.Roact)
+local t = require(script.Parent.Parent.PropTypes)
 
 local enabledImage = "rbxasset://textures/TerrainTools/icon_tick.png"
 --local disabledImage = "rbxasset://textures/TerrainTools/icon_tick_grey.png"
 local frameImage = "rbxasset://textures/TerrainTools/checkbox_square.png"
 
-local function Checkbox(props)
+local Checkbox = Roact.Component:extend("Checkbox")
+
+Checkbox.defaultProps = {
+	Size = UDim2.new(0, 20, 0, 20),
+}
+
+Checkbox.validateProps = t.object({
+	LayoutOrder = t.opt(t.number),
+	Size = t.opt(t.UDim2),
+
+	value = t.opt(t.boolean),
+	setValue = t.opt(t.func),
+})
+
+function Checkbox:render()
+	local props = self.props
 	-- nil == indeterminate
 	local value = props.value
 	local setValue = props.setValue
 
 	return Roact.createElement("ImageButton", {
 		LayoutOrder = props.LayoutOrder,
-		Size = props.Size or UDim2.new(0, 20, 0, 20),
+		Size = props.Size,
 		BackgroundTransparency = 1.0,
 
 		[Roact.Event.MouseButton1Click] = function(rbx)
