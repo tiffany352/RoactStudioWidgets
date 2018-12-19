@@ -1,0 +1,3 @@
+[submodule "modules/rbx-prop-types"]
+	path = modules/rbx-prop-types
+	url = https://github.com/tiffany352/rbx-prop-types.git

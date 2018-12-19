@@ -1,10 +1,22 @@
 local Roact = require(script.Parent.Parent.Roact)
+local t = require(script.Parent.Parent.PropTypes)
 
 local assetDefault = "rbxasset://textures/TerrainTools/button_default.png"
 local assetHovered = "rbxasset://textures/TerrainTools/button_hover.png"
 local assetPressed = "rbxasset://textures/TerrainTools/button_pressed.png"
 
 local Button = Roact.PureComponent:extend("Button")
+
+Button.validateProps = t.object({
+	Size = t.opt(t.UDim2),
+	LayoutOrder = t.opt(t.number),
+
+	disabled = t.opt(t.boolean),
+	pressed = t.opt(t.boolean),
+	onClick = t.opt(t.func),
+	labelText = t.opt(t.string),
+})
+print("Button.validateProps", Button.validateProps)
 
 function Button:render()
 	local props = self.props
